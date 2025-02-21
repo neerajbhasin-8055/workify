@@ -72,28 +72,33 @@ export const getAppliedJobs = async (req, res) => {
 
 export const getApplicants = async (req, res) => {
     try {
-        const jobId = req.params.id
-        const job = Job.findById(jobId).sort({ createdAt: -1 }).populate({
-            path: 'applications',
-            option: { sort: { createdAt: -1 } },
-            populate: {
-                path: 'applicant'
-            }
-        })
+        const jobId = req.params.id;
+
+        // Fetch job details with applicants populated
+        const job = await Job.findById(jobId)
+            .lean()  // Convert Mongoose object to plain JSON
+            .populate({
+                path: 'applications',
+                options: { sort: { createdAt: -1 } }, // Correct sorting inside populate
+                populate: { path: 'applicant' }
+            });
+
         if (!job) {
             return res.status(400).json({
                 message: "Job not found",
                 success: false
-            })
+            });
         }
+
         return res.status(200).json({
             job,
             success: true
-        })
+        });
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        res.status(500).json({ message: "Internal server error", success: false });
     }
-}
+};
 
 export const updateStatus = async (req, res) => {
     try {
