@@ -5,16 +5,25 @@ const Popover = ({ buttonText, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const popoverRef = useRef(null);
 
-  // Handle Click Outside to Close Popover
+  // Disable scrolling when popover is open
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflowX = "hidden"; // Prevents horizontal scrolling
+    } else {
+      document.body.style.overflowX = "auto";
+    }
+
     function handleClickOutside(event) {
       if (popoverRef.current && !popoverRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflowX = "auto"; // Restore scrolling when popover closes
+    };
+  }, [isOpen]);
 
   return (
     <div className="relative inline-block" ref={popoverRef}>
@@ -33,7 +42,7 @@ const Popover = ({ buttonText, children }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="absolute left-1/2 top-12 -translate-x-1/2 bg-white shadow-lg rounded-md p-2 w-40 border"
+          className="absolute center top-12 translate-x-[50%] bg-white shadow-lg rounded-md p-2 border w-max max-w-[80vw] overflow-hidden"
         >
           {children}
         </motion.div>

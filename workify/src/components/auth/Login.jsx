@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { USER_API_END_POINT } from "../../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../../redux/authSlice";
+import { setLoading,setUser } from "../../redux/authSlice";
 import { ClipLoader } from "react-spinners";  // ✅ Import react-spinners
 
 const Login = () => {
@@ -40,7 +40,7 @@ const Login = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        dispatch(setLoading(true)); // ✅ Set loading to true
+        dispatch(setLoading(true));
 
         try {
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
@@ -49,8 +49,9 @@ const Login = () => {
                 },
                 withCredentials: true,
             });
-
+            console.log(res.data)
             if (res.data.success) {
+                dispatch(setUser(res.data.user))
                 navigate("/");
                 toast.success(res.data.message, { customToastStyle });
             }

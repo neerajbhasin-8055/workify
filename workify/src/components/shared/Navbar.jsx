@@ -5,9 +5,10 @@ import Button from "../ui/button";
 import UserIcon from "../../assets/user.svg?react";
 import LogoutIcon from "../../assets/logout.svg?react";
 import Logo from "../../assets/logo.svg?react";
-
+import { useSelector } from "react-redux";
+// import store from '../../redux/store'
 const Navbar = () => {
-    const user = false;
+    const {user} = useSelector(store=>store.auth)
 
     return (
         <>
@@ -48,16 +49,17 @@ const Navbar = () => {
                                 <div className="p-4 w-48">
                                     <h4 className="font-md mb-2 text-lg">Neeraj Bhasin</h4>
 
-                                    <div className="flex flex-col items-start text-left gap-2">
-                                        <div className="flex items-center gap-x-2">
+                                    <div className="flex flex-col items-start text-left gap-x-2">
+                                        <div className="flex items-center gap-1">
                                             <img src={UserIcon} alt="User Icon" className="w-5 h-5" />
-                                            <Button variant="link" className="text-black hover:text-gray-700">
+                                           <Link to="/profile">
+                                           <Button variant="link" className="!text-black hover:text-gray-700">
                                                 View Profile
-                                            </Button>
+                                            </Button></Link> 
                                         </div>
                                         <div className="flex items-center gap-x-2">
                                             <img src={LogoutIcon} alt="Logout Icon" className="w-5 h-5" />
-                                            <Button variant="link" className="text-black hover:text-gray-700">
+                                            <Button variant="link" className="!text-black hover:text-gray-700">
                                                 Logout
                                             </Button>
                                         </div>
