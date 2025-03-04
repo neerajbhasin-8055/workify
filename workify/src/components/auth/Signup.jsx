@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Label from "../ui/label";
 import Input from "../ui/input";
 import Radio from "../ui/radio";
 import Button from "../ui/button";
 import Navbar from "../shared/Navbar";
+import { USER_API_END_POINT } from "../../utils/constant";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Signup = () => {
     const [input, setInput] = useState({
@@ -16,19 +19,51 @@ const Signup = () => {
         file: null,
     });
 
+    const navigate = useNavigate();
+
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
-        console.log(e.target.value)
     };
 
     const changeFileHandler = (e) => {
         setInput({ ...input, file: e.target.files?.[0] });
-        console.log(e.target.value)
     };
 
     const changeRadioHandler = (e) => {
         setInput({ ...input, role: e.target.value });
-        console.log(e.target.value)
+    };
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("fullname", input.fullname);
+        formData.append("email", input.email);
+        formData.append("phoneNumber", input.phoneNumber);
+        formData.append("password", input.password);
+        formData.append("role", input.role);
+        if (input.file) {
+            formData.append("file", input.file);
+        }
+
+        try {
+            const res = await axios.post(
+                "http://localhost:8000/api/user/register",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                }
+            );
+
+            if (res.data.success) {
+                toast.success(res.data.message); // ✅ Show success message
+                navigate("/login");
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong"); // ✅ Show error message
+        }
     };
 
     return (
@@ -37,7 +72,7 @@ const Signup = () => {
             <div className="flex items-center justify-center min-h-screen bg-gray-100">
                 <div className="bg-white p-6 rounded-lg shadow-md w-[35%]">
                     <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
-                    <form className="space-y-4">
+                    <form onSubmit={submitHandler} className="space-y-4">
                         <div>
                             <Label htmlFor="fullName">Full Name</Label>
                             <Input
@@ -92,10 +127,9 @@ const Signup = () => {
                                     { label: "Student", value: "student" },
                                     { label: "Recruiter", value: "recruiter" },
                                 ]}
-                                value={input.role}  // Set the selected value
-                                onChange={changeRadioHandler}  // Update the state
+                                value={input.role}
+                                onChange={changeRadioHandler}
                             />
-
                         </div>
 
                         {/* Profile Picture Upload */}

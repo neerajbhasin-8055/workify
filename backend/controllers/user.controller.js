@@ -3,7 +3,9 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 export const register = async (req, res) => {
     try {
+        console.log("Received request at /register");
         const { fullname, email, phoneNumber, password, role } = req.body;
+        console.log(fullname, email, phoneNumber, password, role)
         if (!fullname || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
@@ -29,7 +31,8 @@ export const register = async (req, res) => {
 
         return res.status(201).json({
             message: "Account created successfully",
-            user: true
+            user,
+            success:true
         })
     } catch (error) {
         consol.log("Error: ", error)
