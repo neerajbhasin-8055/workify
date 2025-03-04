@@ -5,53 +5,66 @@ import Input from "../ui/input";
 import Radio from "../ui/radio";
 import Button from "../ui/button";
 import Navbar from "../shared/Navbar";
-import { set } from "mongoose";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { USER_API_END_POINT } from "../../utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../redux/authSlice";
+import { ClipLoader } from "react-spinners";  // ✅ Import react-spinners
 
 const Login = () => {
     const [input, setInput] = useState({
-        email: '',
-        password: '',
-        role: ''
-    })
-    const navigate = useNavigate('')
+        email: "",
+        password: "",
+        role: "",
+    });
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading } = useSelector((store) => store.auth);
+
     const changeEventHandler = (e) => {
-        setInput({ ...input, [e.target.name]: e.target.value })
-        console.log(e.target.value)
-    }
+        setInput({ ...input, [e.target.name]: e.target.value });
+        console.log(e.target.value);
+    };
+
     const changeRadioHandler = (e) => {
-        setInput({ ...input, role: e.target.value })
-        console.log(e.target.value)
-    }
+        setInput({ ...input, role: e.target.value });
+        console.log(e.target.value);
+    };
+
     const customToastStyle = {
-        background: "#000", // Black background
-        color: "#fff", // White text
-      };
-    const submitHandler = async (e)=>{
-        e.preventDefault()
-       
+        background: "#000",
+        color: "#fff",
+    };
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        dispatch(setLoading(true)); // ✅ Set loading to true
 
         try {
-            const res = await axios.post('http://localhost:8000/api/user/login',input,{
-                headers:{
-                    "Content-Type":"application/json"
+            const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
+                headers: {
+                    "Content-Type": "application/json",
                 },
-                withCredentials:true
-            })
-            if (res.data.success){
-                navigate('/')
-                toast.success(res.data.message,{
-                    customToastStyle
-                });
+                withCredentials: true,
+            });
+
+            if (res.data.success) {
+                navigate("/");
+                toast.success(res.data.message, { customToastStyle });
             }
         } catch (error) {
-            console.log(error)
-              toast.error(error.response?.data?.message || "Something went wrong",{
-                customToastStyle
-              });
+            console.log(error);
+            toast.error(
+                error.response?.data?.message || "Something went wrong",
+                { customToastStyle }
+            );
+        } finally {
+            dispatch(setLoading(false)); // ✅ Set loading to false
         }
-    }
+    };
+
     return (
         <>
             {/* Navbar at the top */}
@@ -92,16 +105,18 @@ const Login = () => {
                                     { label: "Student", value: "student" },
                                     { label: "Recruiter", value: "recruiter" },
                                 ]}
-                                value={input.role}  // Set the selected value
-                                onChange={changeRadioHandler}  // Update the state
+                                value={input.role}
+                                onChange={changeRadioHandler}
                             />
                         </div>
 
+                        {/* Show spinner if loading */}
                         <Button
                             type="submit"
                             className="w-full bg-gray-900 text-white py-2 rounded-md hover:bg-gray-800 hover:text-gray-200"
+                            disabled={loading} // Disable button when loading
                         >
-                            Login
+                            {loading ? <ClipLoader color="#ffffff" size={20} /> : "Login"}
                         </Button>
                     </form>
 

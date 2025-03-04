@@ -5,10 +5,12 @@ import Input from "../ui/input";
 import Radio from "../ui/radio";
 import Button from "../ui/button";
 import Navbar from "../shared/Navbar";
-import { USER_API_END_POINT } from "../../utils/constant";
 import axios from "axios";
-import { toast } from "react-toastify";
-
+import { toast } from "react-toastify"; 
+import { USER_API_END_POINT } from "../../utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../redux/authSlice";
+import { ClipLoader } from "react-spinners"; 
 const Signup = () => {
     const [input, setInput] = useState({
         fullname: "",
@@ -20,6 +22,8 @@ const Signup = () => {
     });
 
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const {loading} = useSelector(store=>store.auth)
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -44,10 +48,9 @@ const Signup = () => {
         if (input.file) {
             formData.append("file", input.file);
         }
-
+        dispatch(setLoading(true))
         try {
-            const res = await axios.post(
-                "http://localhost:8000/api/user/register",
+            const res = await axios.post(`${USER_API_END_POINT}/register`,
                 formData,
                 {
                     headers: {
@@ -56,13 +59,15 @@ const Signup = () => {
                     withCredentials: true,
                 }
             );
-
+            console.log(res.data.success)
             if (res.data.success) {
                 toast.success(res.data.message); // ✅ Show success message
                 navigate("/login");
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong"); // ✅ Show error message
+        }finally{
+            dispatch(setLoading(false))
         }
     };
 
@@ -147,8 +152,9 @@ const Signup = () => {
                         <Button
                             type="submit"
                             className="w-full bg-gray-900 text-white py-2 rounded-md hover:bg-gray-800 hover:text-gray-200"
+                            disabled={loading} // Disable button when loading
                         >
-                            Sign Up
+                            {loading ? <ClipLoader color="#ffffff" size={20} /> : "Signup"}
                         </Button>
                     </form>
 
