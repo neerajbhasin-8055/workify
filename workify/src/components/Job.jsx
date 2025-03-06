@@ -1,13 +1,13 @@
 import React from "react";
 import { Bookmark } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const getRandomColor = () => {
-    const colors = [
-        "#FEE2E2", "#FEF3C7", "#D1FAE5", "#DBEAFE", "#EDE9FE",
-        "#FDE68A", "#FBCFE8", "#C7D2FE", "#A7F3D0", "#FCE7F3",
-        "#FAE8E8", "#FEF9C3", "#E0F2FE", "#DCFCE7", "#FDEDEC"
-      ];
-      
+  const colors = [
+    "#FEE2E2", "#FEF3C7", "#D1FAE5", "#DBEAFE", "#EDE9FE",
+    "#FDE68A", "#FBCFE8", "#C7D2FE", "#A7F3D0", "#FCE7F3",
+    "#FAE8E8", "#FEF9C3", "#E0F2FE", "#DCFCE7", "#FDEDEC"
+  ];
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
@@ -26,7 +26,9 @@ const Job = ({
   logo = "https://via.placeholder.com/40", // Default logo
   daysAgo = 5, // Example: Posted 5 days ago
 }) => {
+  const navigate = useNavigate(); // ✅ Corrected: Moved inside the component
   const bgColor = getRandomColor();
+  const jobId = "afjdsadja"; // ✅ Keep jobId inside the component
 
   return (
     <div
@@ -43,7 +45,7 @@ const Job = ({
 
       {/* Company Info */}
       <div className="flex items-center gap-3">
-        <img src="https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/master/pass/google-logo.jpg" alt="Company Logo" className="w-[20%] h-[100%]   rounded-md" />
+        <img src='https://yt3.googleusercontent.com/FJI5Lzbf2dMd32xOqhoKpJArJooZhoX6v2qOcFO-wjSZUvs3H9xqq2gK4DQ47X0KnYgf7X2rpdU=s900-c-k-c0x00ffffff-no-rj' alt="Company Logo" className="w-[20%] h-[100%] rounded-md" />
         <div>
           <h3 className="text-lg font-semibold">{company}</h3>
           <p className="text-gray-600 text-sm">{location}</p>
@@ -69,7 +71,7 @@ const Job = ({
 
       {/* Buttons */}
       <div className="flex gap-2 mt-4">
-        <button className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900">
+        <button onClick={() => navigate(`/description/${jobId}`)} className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900">
           Details
         </button>
         <button className="border border-gray-500 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200">

@@ -10,8 +10,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <App />
-    </Provider>
-    <ToastContainer
+      <ToastContainer
       position="top-right"
       autoClose={3000}
       hideProgressBar={false}
@@ -22,7 +21,9 @@ createRoot(document.getElementById("root")).render(
       draggable
       pauseOnHover
       theme="dark" // This makes text white by default
-      toastStyle={{ backgroundColor: "#000", color: "#fff" }} /> {/* ✅ Use React-Toastify Toaster */}
+      toastStyle={{ backgroundColor: "#000", color: "#fff" }} />
+    </Provider>
+     {/* ✅ Use React-Toastify Toaster */}
 
   </StrictMode>
 );

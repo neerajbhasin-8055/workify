@@ -1,15 +1,42 @@
 import React from "react";
-import { Link } from "react-router-dom"; // ✅ Import Link
+import { Link, useNavigate } from "react-router-dom"; // ✅ Import Link
 import Popover from "../ui/popover";
 import Button from "../ui/button";
 import UserIcon from "../../assets/user.svg?react";
 import LogoutIcon from "../../assets/logout.svg?react";
 import Logo from "../../assets/logo.svg?react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import axios from 'axios'
+import { USER_API_END_POINT } from "../../utils/constant";
+import { setUser } from "../../redux/authSlice";
 // import store from '../../redux/store'
 const Navbar = () => {
     const {user} = useSelector(store=>store.auth)
-
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const handleLogout = async () => {
+        try {
+            const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
+    
+            if (res.data.success) {
+                dispatch(setUser(null)); 
+    
+                toast.success(res.data.message, {
+                    position: "top-right",
+                    autoClose: 2000, 
+                    theme: "dark",
+                });
+    
+                setTimeout(() => {
+                    navigate("/");
+                }, 1000); 
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong!");
+        }
+    };
+    
     return (
         <>
             <div className="bg-gray-900 p-6 border-b-4 border-gray-500">
@@ -59,7 +86,7 @@ const Navbar = () => {
                                         </div>
                                         <div className="flex items-center gap-x-2">
                                             <img src={LogoutIcon} alt="Logout Icon" className="w-5 h-5" />
-                                            <Button variant="link" className="!text-black hover:text-gray-700">
+                                            <Button onClick={handleLogout} variant="link" className="!text-black hover:text-gray-700">
                                                 Logout
                                             </Button>
                                         </div>
