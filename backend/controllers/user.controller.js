@@ -167,16 +167,7 @@ export const updateProfile = async (req, res) => {
         
         if(skills)user.profile.skills = skillsArray
         const image = req.file
-        let profilePhotoUrl = "";
-        if (image) {
-            const fileUri = getDataUri(file);
-            const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
-                resource_type: "raw",
-                access_mode: "public",
-            });
-            profilePhotoUrl = cloudResponse.secure_url;
-            user.profile.profilePhoto = profilePhotoUrl
-        }
+        
         
            
 

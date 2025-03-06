@@ -19,8 +19,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         phoneNumber: user?.phoneNumber,
         bio: user?.profile?.bio,
         skills: user?.profile?.skills.map(skill => skill),
-        file: user?.profile?.resume,
-        profile : user?.profile?.profilePhoto
+        file: user?.profile?.resume
     })
 
     const dispatch = useDispatch()
@@ -144,19 +143,10 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                     <div className="grid grid-cols-4 gap-4 text-center">
                         <Label className="my-4" htmlFor="file">Resume</Label>
                         <Input
+
                             name="file"
                             type="file"
                             id="file"
-                            className="col-span-3"
-                            onChange={fileChangeHandler}
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 gap-4 text-center">
-                        <Label className="my-4" htmlFor="file">Profile</Label>
-                        <Input
-                            name="profile"
-                            type="file"
-                            id="profile"
                             className="col-span-3"
                             onChange={fileChangeHandler}
                         />

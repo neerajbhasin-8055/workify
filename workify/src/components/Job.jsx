@@ -15,20 +15,9 @@ const timeAgo = (daysAgo) => {
   return daysAgo === 0 ? "Today" : `${daysAgo} days ago`;
 };
 
-const Job = ({
-  company = "Google",
-  location = "Bangalore, India",
-  title = "Software Engineer",
-  description = "We are looking for a talented software engineer to join our team.",
-  positions = "5",
-  salary = "₹20 LPA",
-  type = "Full-time",
-  logo = "https://via.placeholder.com/40", // Default logo
-  daysAgo = 5, // Example: Posted 5 days ago
-}) => {
-  const navigate = useNavigate(); // ✅ Corrected: Moved inside the component
+const Job = ({job}) => {
+  const navigate = useNavigate(); 
   const bgColor = getRandomColor();
-  const jobId = "afjdsadja"; // ✅ Keep jobId inside the component
 
   return (
     <div
@@ -37,7 +26,7 @@ const Job = ({
     >
       {/* Posting Date & Bookmark */}
       <div className="flex justify-between items-center mb-2">
-        <p className="text-gray-600 text-sm">{timeAgo(daysAgo)}</p>
+        <p className="text-gray-600 text-sm">2 daysAgo</p>
         <button className="p-2 rounded-full hover:bg-gray-200">
           <Bookmark className="text-black" />
         </button>
@@ -47,31 +36,31 @@ const Job = ({
       <div className="flex items-center gap-3">
         <img src='https://yt3.googleusercontent.com/FJI5Lzbf2dMd32xOqhoKpJArJooZhoX6v2qOcFO-wjSZUvs3H9xqq2gK4DQ47X0KnYgf7X2rpdU=s900-c-k-c0x00ffffff-no-rj' alt="Company Logo" className="w-[20%] h-[100%] rounded-md" />
         <div>
-          <h3 className="text-lg font-semibold">{company}</h3>
-          <p className="text-gray-600 text-sm">{location}</p>
+          <h3 className="text-lg font-semibold">{job?.company?.name}</h3>
+          <p className="text-gray-600 text-sm">India</p>
         </div>
       </div>
 
       {/* Job Title */}
-      <h2 className="text-2xl font-semibold mt-3">{title}</h2>
-      <p className="text-gray-600 text-sm mb-4">{description}</p>
+      <h2 className="text-2xl font-semibold mt-3">{job?.title}</h2>
+      <p className="text-gray-600 text-sm mb-4">{job?.description}</p>
 
       {/* Job Badges */}
       <div className="flex flex-wrap gap-2">
         <span className="px-3 py-1 bg-gray-100 text-gray-800 border border-gray-300 rounded-full text-xs">
-          {positions} Positions
+          {job?.position} Positions
         </span>
         <span className="px-3 py-1 bg-gray-600 text-white border border-gray-500 rounded-full text-xs">
-          💰 {salary}
+          💰 {job?.salary}
         </span>
         <span className="px-3 py-1 bg-gray-900 text-white border border-gray-700 rounded-full text-xs">
-          {type}
+          {job?.jobType}
         </span>
       </div>
 
       {/* Buttons */}
       <div className="flex gap-2 mt-4">
-        <button onClick={() => navigate(`/description/${jobId}`)} className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900">
+        <button onClick={() => navigate(`/description/${job?._id}`)} className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900">
           Details
         </button>
         <button className="border border-gray-500 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200">

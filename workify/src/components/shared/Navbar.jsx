@@ -74,7 +74,11 @@ const Navbar = () => {
                         ) : (
                             <Popover className="bg-black" buttonText="Profile">
                                 <div className="p-4 w-48">
-                                    <h4 className="font-md mb-2 text-lg">Neeraj Bhasin</h4>
+                                    <div className="flex gap-2 items-center">
+                                    <img src={user?.profile?.profilePhoto} className="w-15 h-10 rounded-full"></img>
+                                    <h4 className="font-md mb-2 text-lg">{user?.fullname}</h4>
+                                    </div>
+                                    
 
                                     <div className="flex flex-col items-start text-left gap-x-2">
                                         <div className="flex items-center gap-1">
