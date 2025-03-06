@@ -11,8 +11,11 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const timeAgo = (daysAgo) => {
-  return daysAgo === 0 ? "Today" : `${daysAgo} days ago`;
+const timeAgo = (monogDbtime) => {
+  const createdAt = new Date(monogDbtime);
+  const currentTime = new Date();
+  const timeDifference = currentTime - createdAt
+  return Math.floor(timeDifference/(1000*24*60*60))
 };
 
 const Job = ({job}) => {
@@ -26,7 +29,7 @@ const Job = ({job}) => {
     >
       {/* Posting Date & Bookmark */}
       <div className="flex justify-between items-center mb-2">
-        <p className="text-gray-600 text-sm">2 daysAgo</p>
+        <p className="text-gray-600 text-sm">{timeAgo(job?.createdAt)=== 0 ? "Today" :`${timeAgo(job?.createdAt)} days ago`}</p>
         <button className="p-2 rounded-full hover:bg-gray-200">
           <Bookmark className="text-black" />
         </button>

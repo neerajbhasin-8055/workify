@@ -64,23 +64,30 @@ export const getAllJobs = async (req, res) => {
 // for students
 export const jobById = async (req, res) => {
     try {
-        const jobId = req.params.id
+        const jobId = req.params.id;
         const job = await Job.findById(jobId)
+            .populate({
+                path: 'applications',
+                // populate: { path: 'applicant', select: '_id name email' } // Populate applicant details
+            });
+
         if (!job) {
             return res.status(400).json({
                 message: "Job not found",
                 success: false
-            })
-        };
+            });
+        }
+
         return res.status(200).json({
             job,
             success: true
-        })
+        });
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error", success: false });
     }
-}
+};
 
 
 // how many jobs admin has created 
