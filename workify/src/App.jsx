@@ -7,6 +7,9 @@ import Jobs from './components/Jobs';
 import Browse from './components/Browse';
 import Profile from './components/Profile';
 import JobDescription from './components/JobDescription';
+import Companies from './components/admin/Companies';
+import CreateCompany from './components/admin/CreateCompany';
+import CompanySetup from './components/admin/CompanySetup';
 
 function App() {
   return (
@@ -19,6 +22,12 @@ function App() {
         <Route path ="/browse" element = {<Browse/>}/>
         <Route path ="/profile" element = {<Profile/>}/>
         <Route path ="/description/:id" element = {<JobDescription/>}/>
+        {/* <Route path = '/resume-builder' element = {<ResumeBuilder/>}/> */}
+        {/* admin routes from here */}
+        <Route path = '/admin/companies' element = {<Companies/>}/>
+        <Route path = '/admin/companies/create' element = {<CreateCompany/>}/>
+        <Route path = '/admin/companies/:id' element = {<CompanySetup/>}/>
+
       </Routes>
     </Router>
   );

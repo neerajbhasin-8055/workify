@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import Footer from './Footer'
 const Jobs = () => {
     const {allJobs} = useSelector(store=>store.job)
+    console.log(allJobs)
     return (
 
         <div>
