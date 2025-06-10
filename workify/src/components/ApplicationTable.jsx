@@ -1,33 +1,11 @@
+import { all } from "axios";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const ApplicationTable = () => {
-    const appliedJobs = [
-        {
-            id: 1,
-            title: "Software Engineer",
-            company: "Google",
-            location: "Bangalore, India",
-            status: "Pending",
-            appliedDate: "Feb 20, 2024",
-        },
-        {
-            id: 2,
-            title: "Frontend Developer",
-            company: "Microsoft",
-            location: "Hyderabad, India",
-            status: "Interview Scheduled",
-            appliedDate: "Feb 15, 2024",
-        },
-        {
-            id: 3,
-            title: "Backend Developer",
-            company: "Amazon",
-            location: "Pune, India",
-            status: "Rejected",
-            appliedDate: "Feb 10, 2024",
-        },
-    ];
+    const { allAppliedJobs } = useSelector(store => store.job)
 
+    console.log(allAppliedJobs, "applied jobs")
     return (
         <div className="w-full max-w-7xl mx-auto p-4">
             {/* Table Caption */}
@@ -41,7 +19,7 @@ const ApplicationTable = () => {
                         <tr>
                             <th className="p-3 text-left">Job Title</th>
                             <th className="p-3 text-left">Company</th>
-                           
+
                             <th className="p-3 text-left">Status</th>
                             <th className="p-3 text-left">Applied Date</th>
                         </tr>
@@ -49,25 +27,26 @@ const ApplicationTable = () => {
 
                     {/* Table Body */}
                     <tbody>
-                        {appliedJobs.map((job) => (
-                            <tr key={job.id} className="border-t">
-                                <td className="p-3">{job.title}</td>
-                                <td className="p-3">{job.company}</td>
-                               
-                                <td
-                                    className={`p-3 font-medium ${job.status === "Pending"
-                                            ? "text-yellow-600"
-                                            : job.status === "Interview Scheduled"
-                                                ? "text-blue-600"
-                                                : "text-red-600"
-                                        }`}
-                                >
-                                    {job.status}
+                        {!allAppliedJobs || allAppliedJobs.length === 0 ? (
+                            <tr>
+                                <td colSpan="4" className="text-center py-4 text-gray-500">
+                                    You haven't applied for any job yet.
                                 </td>
-                                <td className="p-3">{job.appliedDate}</td>
                             </tr>
-                        ))}
+                        ) : (
+                            allAppliedJobs.map((appliedJob) => (
+                                <tr key={appliedJob._id} className="border-t">
+                                    <td className="p-3">{appliedJob.job.title}</td>
+                                    <td className="p-3">{appliedJob.job.company.name}</td>
+                                    <td className="p-3">{appliedJob.status}</td>
+                                    <td className="p-3">
+                                        {new Date(appliedJob.createdAt).toLocaleDateString()}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
+
                 </table>
             </div>
         </div>

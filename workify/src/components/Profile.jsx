@@ -8,8 +8,10 @@ import Badge from './ui/badge'
 import ApplicationTable from './ApplicationTable'
 import UpdateProfileDailog from './UpdateProfileDailog '
 import { useSelector } from 'react-redux'
+import useGetAppliedJobs from '../hooks/useGetAppliedJobs'
 
 const Profile = () => {
+    useGetAppliedJobs()
     const isResume = true
     const { user } = useSelector(store => store.auth) 
 

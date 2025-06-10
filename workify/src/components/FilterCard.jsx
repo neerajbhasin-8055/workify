@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setSearchedQuery } from "../redux/jobSlice";
 
 const filterData = [
     {
@@ -23,39 +24,39 @@ const filterData = [
 ];
 
 const FilterCard = () => {
-    const [selectedFilters, setSelectedFilters] = useState({
-        Location: "",
-        Industry: "",
-        Salary: "",
-    });
-
-    const handleRadioChange = (filterType, value) => {
-        setSelectedFilters((prev) => ({
-            ...prev,
-            [filterType]: value,
-        }));
+    const [selectedValue, setSelectedValue] = useState('');
+const dispatch = useDispatch()
+    const changeHandler = (e) => {
+        setSelectedValue(e.target.value); // set the actual string value (like "Hyderabad")
     };
+
+    useEffect(() => {
+       dispatch(setSearchedQuery(selectedValue))
+    }, [selectedValue]);
 
     return (
         <div className="p-4 border rounded-lg shadow-md bg-white">
-            <h1 className="text-lg  font-semibold mb-4">Filter Jobs</h1>
+            <h1 className="text-lg font-semibold mb-4">Filter Jobs</h1>
             {filterData.map((filter, index) => (
                 <div key={index} className="mb-6">
                     <h2 className="text-md font-medium mb-3">{filter.filterType}</h2>
                     <div className="flex flex-col gap-2">
-                        {filter.array.map((item) => (
-                            <label key={item} className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="radio"
-                                    name={filter.filterType} // Ensures each category has a unique radio group
-                                    value={item}
-                                    checked={selectedFilters[filter.filterType] === item}
-                                    onChange={() => handleRadioChange(filter.filterType, item)}
-                                    className="cursor-pointer"
-                                />
-                                {item}
-                            </label>
-                        ))}
+                        {filter.array.map((item, idx) => {
+                            const itemId = `id${index}-${idx}`;
+                            return (
+                                <label key={itemId} htmlFor={itemId} className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        id={itemId}
+                                        name={filter.filterType} // unique radio group per filterType
+                                        value={item}
+                                        checked={selectedValue === item}
+                                        onChange={changeHandler}
+                                    />
+                                    {item}
+                                </label>
+                            );
+                        })}
                     </div>
                 </div>
             ))}

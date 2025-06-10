@@ -37,7 +37,7 @@ const Job = ({job}) => {
 
       {/* Company Info */}
       <div className="flex items-center gap-3">
-        <img src='https://yt3.googleusercontent.com/FJI5Lzbf2dMd32xOqhoKpJArJooZhoX6v2qOcFO-wjSZUvs3H9xqq2gK4DQ47X0KnYgf7X2rpdU=s900-c-k-c0x00ffffff-no-rj' alt="Company Logo" className="w-[20%] h-[100%] rounded-md" />
+        <img src={job?.company?.logo} alt="Company Logo" className="w-[20%] h-[100%] rounded-md" />
         <div>
           <h3 className="text-lg font-semibold">{job?.company?.name}</h3>
           <p className="text-gray-600 text-sm">India</p>

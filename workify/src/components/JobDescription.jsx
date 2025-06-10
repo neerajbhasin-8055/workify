@@ -12,21 +12,24 @@ import { toast } from 'react-toastify';
 import Footer from './Footer';
 
 const JobDescription = () => {
-    
-    const params = useParams()
+ 
     const {singleJob}  = useSelector(store=>store.job)
     const {user} = useSelector(store=>store.auth)
-    const jobId = params.id
-    
-    const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant?._id === user?._id) || false;
+    const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
 
     const [isApplied,setIsApplied] = useState(isInitiallyApplied)
+
+       
+    const params = useParams()
+    const jobId = params.id
+    const dispatch = useDispatch()
+    
     const applyJobHandler = async ()=>{
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`,{withCredentials:true})
             if(res.data.success){
                 setIsApplied(true)
-                const updatedSingleJob = {...singleJob,applications:[...singleJob.applications,{applicant:user}]}
+                const updatedSingleJob = {...singleJob,applications:[...singleJob.applications,{applicant:user?._id}]}
                 dispatch(setSingleJob(updatedSingleJob))
                 toast.status(res.data.message)
             }
@@ -35,18 +38,27 @@ const JobDescription = () => {
             toast.error(error.response.data.message)
         }
     }
-   const dispatch = useDispatch()
+  
    useEffect(() => {
     const fetchSingleJob = async () => {
         try {
             const res = await axios.get(`${JOB_API_END_POINT}/getJob/${jobId}`, { withCredentials: true });
+            console.log("Fetched Job:", res.data.job);
+console.log("Applications:", res.data.job.applications);
+
 
             if (res.data.success) {
                 dispatch(setSingleJob(res.data.job));
 
                 // Ensure applications are an array of objects before checking
-                const hasApplied = res.data.job.applications?.some(application => application.applicant?._id === user?._id);
+               const hasApplied = res.data.job.applications.some(application => {
+    const applicantId = typeof application.applicant === 'string' ? application.applicant : application.applicant?._id;
+    return applicantId === user?._id;
+});
+
                 setIsApplied(hasApplied);
+                toast.success(res.data.message); // not toast.status
+
             }
         } catch (error) {
             console.log(error);

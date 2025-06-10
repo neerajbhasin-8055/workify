@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Edit from "../../assets/edit.svg";
 import Button from "../ui/button";
 
 const CompaniesTable = () => {
-    const { allCompanies } = useSelector(store => store.company);
+    const { allCompanies, searchCompanyByText } = useSelector(store => store.company);
     const navigate = useNavigate();
-
+    const [filterCompany, setFilterCompany] = useState(allCompanies)
+    useEffect(() => {
+        const filteredCompany = allCompanies.length >= 0 && allCompanies.filter((company) => {
+            if (!searchCompanyByText) {
+                return true
+            }
+            return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase())
+        })
+        setFilterCompany(filteredCompany)
+    }, [allCompanies, searchCompanyByText])
     return (
-        <div className="container mx-auto p-5">
-            <h2 className="text-2xl font-semibold mb-4">List of Registered Companies</h2>
+        <div className="container mx-auto p-5 my-10">
+            <h2 className="text-xl font-semibold mb-4 text-gray-500 text-center">All Your registered companies</h2>
 
-            <div className="overflow-x-auto">
+            <div className=" overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200 shadow-md">
                     <thead>
                         <tr className="bg-gray-100 border-b">
@@ -23,14 +32,14 @@ const CompaniesTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {allCompanies.length > 0 ? (
-                            allCompanies.map((company) => (
+                        {filterCompany.length > 0 ? (
+                            filterCompany.map((company) => (
                                 <tr key={company._id} className="border-b">
                                     <td className="py-3 px-6">
-                                        <img 
-                                            src={company.logo || "https://via.placeholder.com/50"} 
-                                            alt="Company Logo" 
-                                            className="w-10 h-10 rounded-full" 
+                                        <img
+                                            src={company.logo || "https://via.placeholder.com/50"}
+                                            alt="Company Logo"
+                                            className="w-15 h-10 rounded-full"
                                         />
                                     </td>
                                     <td className="py-3 px-6">{company.name}</td>

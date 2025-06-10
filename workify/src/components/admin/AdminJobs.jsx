@@ -3,13 +3,17 @@ import Navbar from "../shared/Navbar";
 import Button from "../ui/button";
 import CompaniesTable from "./CompaniesTable";
 import { useNavigate } from "react-router-dom";
-import useGetAllCompanies from '../../hooks/useGetAllCompanies';
+
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../ui/input";
-import { setSearchCompanyByText } from "../../redux/companySlice";
 
-const Companies = () => {
-    useGetAllCompanies();
+import AdminJobsTable from "./AdminJobsTable";
+import useGetAllAdminJobs from "../../hooks/useGetAdminJobs";
+import { setSearchJobByText } from "../../redux/jobSlice";
+
+const AdminJobs = () => {
+
+    useGetAllAdminJobs()
     const navigate = useNavigate();
     const { allCompanies } = useSelector(store => store.company);
     const { user } = useSelector(store => store.auth);
@@ -18,7 +22,7 @@ const dispatch = useDispatch()
     // Ensure user exists before filtering
     const userCompanies = user ? allCompanies.filter(company => company.userId === user.id) : [];
 useEffect(()=>{
-    dispatch(setSearchCompanyByText(input))
+    dispatch(setSearchJobByText(input))
 },[input])
     return (
         <>
@@ -27,21 +31,21 @@ useEffect(()=>{
                 <div className="flex items-center justify-between">
                     <Input className="w-[20%] p-4" placeholder="Filter by name" onChange={(e)=>setInput(e.target.value)}></Input>
                     <Button
-                        onClick={() => navigate("/admin/companies/create")}
+                        onClick={() => navigate("/admin/jobs/create")}
                         variant="outline"
                         className="px-2 mt-2 !hover:bg-gray-800 !hover:text-white"
                     >
-                        New Company
+                        New Job 
                     </Button>
                 </div>
                 {userCompanies.length > 0 ? (
-                    <CompaniesTable allCompanies={userCompanies} />
+                    <AdminJobsTable allCompanies={userCompanies} />
                 ) : (
-                    <p className="text-center mt-5">No companies found</p>
+                    <p className="text-center mt-5">Post New Job</p>
                 )}
             </div>
         </>
     );
 };
 
-export default Companies;
+export default AdminJobs;

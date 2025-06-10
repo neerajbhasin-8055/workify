@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Label from "../ui/label";
 import Input from "../ui/input";
@@ -21,7 +21,7 @@ const Login = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { loading } = useSelector((store) => store.auth);
+    const { loading, user } = useSelector((store) => store.auth);
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -65,7 +65,11 @@ const Login = () => {
             dispatch(setLoading(false)); // ✅ Set loading to false
         }
     };
-
+useEffect(()=>{
+    if(user){
+        navigate("/")
+    }
+},[])
     return (
         <>
             {/* Navbar at the top */}

@@ -4,6 +4,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Button from "./ui/button";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setSearchedQuery } from "../redux/jobSlice";
 
 const categories = [
     "Frontend Developer",
@@ -15,7 +18,7 @@ const categories = [
 
 // Custom Previous Arrow Component
 const PrevArrow = ({ onClick }) => (
-    <button 
+    <button
         className="absolute left-[-30px] top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-3 rounded-full shadow-lg z-10"
         onClick={onClick}
     >
@@ -25,7 +28,7 @@ const PrevArrow = ({ onClick }) => (
 
 // Custom Next Arrow Component
 const NextArrow = ({ onClick }) => (
-    <button 
+    <button
         className="absolute right-[-30px] top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-3 rounded-full shadow-lg z-10"
         onClick={onClick}
     >
@@ -34,26 +37,36 @@ const NextArrow = ({ onClick }) => (
 );
 
 const CategoryCarousel = () => {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const searchJobHandler = (query) => {
+    
+
+        dispatch(setSearchedQuery(query))
+
+        navigate('/browse')
+    }
     const settings = {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 3,  
+        slidesToShow: 3,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 3000, 
+        autoplaySpeed: 3000,
         arrows: true,
         prevArrow: <PrevArrow />,
         nextArrow: <NextArrow />,
         responsive: [
             {
-                breakpoint: 1024, 
+                breakpoint: 1024,
                 settings: {
                     slidesToShow: 2,
                 }
             },
             {
-                breakpoint: 768, 
+                breakpoint: 768,
                 settings: {
                     slidesToShow: 1,
                 }
@@ -68,8 +81,9 @@ const CategoryCarousel = () => {
             <Slider {...settings}>
                 {categories.map((category, index) => (
                     <div key={index} className="px-2">
-                        <Button className="w-full bg-gray-900 text-white p-3 hover:bg-gray-700 rounded-md text-center">
+                        <Button onClick={() => searchJobHandler(category)} className="w-full bg-gray-900 text-white p-3 hover:bg-gray-700 rounded-md text-center">
                             {category}
+
                         </Button>
                     </div>
                 ))}
