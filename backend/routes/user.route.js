@@ -8,5 +8,12 @@ router.route('/register').post(singleUpload,register)
 router.route('/login').post(login)
 router.route('/logout').get(logout)
 router.route('/profile/update').post(isAuthenticated,singleUpload,updateProfile)
+router.get('/me', isAuthenticated, (req, res) => {
+    res.status(200).json({
+        message: "Authenticated ✅",
+        userId: req.id
+    });
+});
+
 
 export default router
